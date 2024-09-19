@@ -487,3 +487,38 @@ ORDER BY
     avg_production_budget DESC,  -- Then by production budget (descending)
     avg_metascore ,
     release_month ;
+
+
+
+    ---------------------------------------------------------------------CODE BY DAVID TAPIA -----------------------------------------------------------------------------------
+-- Create a new table 'expert_sales' that joins data from 'sales' and "expert"
+-- This query joins the sales and expert tables based on title and release year
+
+CREATE TABLE expert_sales AS
+SELECT 
+    s.url,                              -- URL of the movie or review
+    s.title AS sales_title,              -- Title of the movie from the 'sales' table
+    s.genre,                             -- Genre of the movie
+    s.worldwide_box_office,              -- Worldwide box office earnings
+    s.production_budget,                 -- Production budget of the movie
+    s.opening_weekend,                   -- Opening weekend revenue
+    s.theatre_count,                     -- Number of theatres it was shown in
+    s.avg_run_per_theatre,               -- Average run per theatre
+    s.runtime,                           -- Duration of the movie
+    s.creative_type,                     -- Type of creative content (e.g., animation, live-action)
+    s.release_year,                      -- Release year of the movie
+
+    -- Columns from the 'expert' table
+    e.title AS movie_title,              -- Title from the 'expert' table for verification
+    e.avg_idvscore,                      -- Average individual score from the 'expert' table
+    e.avg_min_year,                      -- Average minimum year of reviews from 'expert'
+    e.title_year                         -- Concatenated title and year (e.g., 'movie_title_year')
+    
+-- Data source 1: 'sales' table (movie sales data)
+FROM sales s
+
+-- Join with 'expert' table (movie expert data)
+JOIN expert e
+ON LOWER(s.title_year) = LOWER(e.title_year);  -- Match on title and year (case-insensitive)
+
+    ---------------------------------------------------------------------END CODE DAVID TAPIA -----------------------------------------------------------------------------------
