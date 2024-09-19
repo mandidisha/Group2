@@ -79,10 +79,10 @@ ORDER BY
 --To run this code to preview the research table stored in a temporary table
 SELECT * FROM movie_analysis
 ---------------------------------------------------------------------END CODE BY Mandi Disha
-
+-------------------------------------------ANASTASIYA-------------------------------------
 
 -- Creating sales table [Done by Anastasiya]
-CREATE TABLE sales_v20 (
+CREATE TABLE sales (
     url VARCHAR (255) PRIMARY KEY,                -- Primary key for the table
     title VARCHAR (10000),                        -- Title of the movie (up to 10,000 characters)
     genre VARCHAR (50),                           -- Genre of the movie (up to 50 characters)
@@ -99,14 +99,15 @@ CREATE TABLE sales_v20 (
 );
 
 
--- I cleaned the table to remove empty/null strings to get more clear data
- DELETE FROM sales_v20
+-- Cleaned the table to remove the strings wihtout data to get more clear data
+  DELETE FROM sales
 WHERE production_budget IS NULL
-OR production_budget = ''
-OR worldwide_box_office IS NULL
-OR worldwide_box_office = '';
+OR worldwide_box_office IS NULL;
 
---s
+
+--This query lets analyze movie data by extracting information 
+--on the average production budget, metascore, 
+--and worldwide box office grouped by the release month. 
     
         SELECT 
     EXTRACT(MONTH FROM m.reldate) AS release_month,  -- Extracting the month from the release date
@@ -114,9 +115,9 @@ OR worldwide_box_office = '';
     ROUND(AVG(m.metascore), 2) AS avg_metascore,  -- Average metascore
     ROUND(AVG(s.worldwide_box_office), 2) AS avg_box_office  -- Average worldwide box office
 FROM
-    sales_v20 s
+    sales s
 INNER JOIN
-    movies2 m
+    movies m
 ON
     s.title = m.title
 AND
@@ -132,3 +133,4 @@ ORDER BY
     avg_production_budget DESC,  -- Then by production budget (descending)
     avg_metascore ,
     release_month ;
+    ------------------------------------------END BY ANASTASIYA-----------------------------
