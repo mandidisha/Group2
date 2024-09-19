@@ -44,33 +44,44 @@ CREATE TABLE Rating (
 
 --Step 1: Creating a subquey to rank movies based on box office per each rating 
 
-CREATE TEMP TABLE movie_analysis AS
-	SELECT
-    m.rating,  -- Grouping by movie rating
-    COUNT(s.title) AS movie_count,
-    ROUND(AVG(s.production_budget), 2) AS avg_production_budget,  -- Average production budget rounded to 2 decimal places
-    ROUND(AVG(m.userscore), 2) AS avg_userscore,  -- Average metascore rounded to 2 decimal places
-    ROUND(AVG(s.worldwide_box_office), 2) AS avg_box_office,  -- Average box office rounded to 2 decimal places
-    ROUND((AVG(s.worldwide_box_office) - AVG(s.production_budget)) / AVG(s.production_budget) * 100, 2) AS avg_profit_percentage  -- Profit percentage
-FROM
-    sales_v20 s
-JOIN
-    movies m
-ON
-    s.title = m.title
-AND
-    s.release_year = EXTRACT(YEAR FROM m.reldate)
-WHERE
-    s.production_budget IS NOT NULL  -- Ensuring we only calculate for movies with known budgets
-AND
-    m.userscore IS NOT NULL -- Ensuring we only calculate for movies with known Metascores
-GROUP BY
-    m.rating  -- Grouping the results by rating
-ORDER BY
-    avg_production_budget DESC,  -- Ordering by the average production budget (descending)
-    avg_userscore DESC,  -- Ordering by the average metascore (descending)
-    avg_box_office DESC;  -- Ordering by the average box office (descending)
+    SELECT
+        r.rating,  -- Grouping by movie rating
+        COUNT(s.title) AS movie_count,
+        ROUND(AVG(s.production_budget), 2) AS avg_production_budget,  -- Average production budget
+        ROUND(AVG(m.userscore), 2) AS avg_userscore,  -- Average user score
+        ROUND(AVG(s.worldwide_box_office), 2) AS avg_box_office,  -- Average worldwide box office
+        ROUND((AVG(s.worldwide_box_office) - AVG(s.production_budget)) / AVG(s.production_budget) * 100, 2) AS avg_profit_percentage,  -- Profit percentage
+        SUM(s.worldwide_box_office) AS total_box_office,  -- Total worldwide box office for each rating
+        SUM(s.production_budget) AS total_budget,  -- Total budget for each rating
+        ROUND(SUM(s.worldwide_box_office) / SUM(s.production_budget), 2) AS roi_ratio,  -- Return on Investment (ROI)
+        
+        -- Conditional profit calculation: Only include movies with a budget over $10 million
+        ROUND(AVG(
+            CASE 
+                WHEN s.production_budget > 20000000 THEN (s.worldwide_box_office - s.production_budget) / s.production_budget * 100
+                ELSE NULL
+            END
+        ), 2) AS avg_profit_large_budget_movies
 
+    FROM
+        movies m
+    INNER JOIN
+        sales s ON s.title = m.title
+    AND
+        s.release_year = EXTRACT(YEAR FROM m.reldate)
+    LEFT JOIN 
+        rating r ON m.url = r.url
+    WHERE
+        s.production_budget IS NOT NULL  -- Ensuring we only calculate for movies with known budgets
+    AND
+        m.userscore IS NOT NULL  -- Ensuring we only calculate for movies with known user scores
+    GROUP BY
+        r.rating  -- Grouping the results by rating
+    ORDER BY
+        avg_production_budget DESC,  -- Ordering by the average production budget (descending)
+        avg_userscore DESC,  -- Ordering by the average user score (descending)
+        avg_box_office DESC; 
+        
 --NEXT STEP: We'll use Python to run a correlation analysis on the table, looking for connections between box office sales,
 --userscore ratings, and production budgets. This research will assist us in showing the extent to which 
 --film budgets and user reception influence box office success.
