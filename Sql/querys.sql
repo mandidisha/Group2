@@ -1,7 +1,7 @@
 ---------------------------------------------------------------------These are the SQL queries for Group 2-------------------------------------------------------------------
 
 
---Our group is composed by: Mandi, David, Anastasia, Zakaria and 
+--Our group is composed by: Mandi, David, Anastasia, Zakaria and Mees
 
 
 ---GROUP TASKS---
@@ -9,7 +9,7 @@
 --Further explanation about how the datasets were cleaned and processed in the research document
 
 
--- Creating movie table [Done by Mandi ]
+-- Creating movie table [Done by Mandi]
 CREATE TABLE Movies (
     URL VARCHAR(255) PRIMARY KEY,  -- URL of the movie's page
     Title VARCHAR(255),  -- Movie title
@@ -34,7 +34,7 @@ CREATE TABLE Rating (
 );
 
 
----------------------------------------------------------------------CODE BY Mandi -----------------------------------------------------------------------------------
+---------------------------------------------------------------------CODE BY Mandi Disha-----------------------------------------------------------------------------------
 
 
 --The database is created and now we are going to analyze what is the relationship
@@ -80,3 +80,55 @@ ORDER BY
 SELECT * FROM movie_analysis
 ---------------------------------------------------------------------END CODE BY Mandi Disha
 
+
+-- Creating sales table [Done by Anastasiya]
+CREATE TABLE sales_v20 (
+    url VARCHAR (255) PRIMARY KEY,                -- Primary key for the table
+    title VARCHAR (10000),                        -- Title of the movie (up to 10,000 characters)
+    genre VARCHAR (50),                           -- Genre of the movie (up to 50 characters)
+    worldwide_box_office VARCHAR (50),            -- Worldwide box office earnings
+    production_budget VARCHAR (50),               -- Production budget of the movie
+    opening_weekend VARCHAR (50),                 -- Opening weekend revenue
+    theatre_count VARCHAR (50),                   -- Number of theatres it was shown in
+    avg_run_per_theatre VARCHAR (50),             -- Average run per theatre
+    runtime VARCHAR (50),                         -- Duration of the movie
+    creative_type VARCHAR (100),                  -- Type of creative content (e.g., animation, live-action)
+    release_year INT,                             -- Release year of the movie
+    release_date VARCHAR (100),                   -- Release date of the movie
+    keywords VARCHAR(500)                         -- Keywords associated with the movie
+);
+
+
+-- I cleaned the table to remove empty/null strings to get more clear data
+ DELETE FROM sales_v20
+WHERE production_budget IS NULL
+OR production_budget = ''
+OR worldwide_box_office IS NULL
+OR worldwide_box_office = '';
+
+--s
+    
+        SELECT 
+    EXTRACT(MONTH FROM m.reldate) AS release_month,  -- Extracting the month from the release date
+    ROUND(AVG(s.production_budget), 2) AS avg_production_budget,  -- Average production budget
+    ROUND(AVG(m.metascore), 2) AS avg_metascore,  -- Average metascore
+    ROUND(AVG(s.worldwide_box_office), 2) AS avg_box_office  -- Average worldwide box office
+FROM
+    sales_v20 s
+INNER JOIN
+    movies2 m
+ON
+    s.title = m.title
+AND
+    s.release_year = EXTRACT(YEAR FROM m.reldate)
+WHERE
+    s.production_budget IS NOT NULL  -- Only calculate for movies with known budgets
+AND
+    m.metascore IS NOT NULL  -- Only calculate for movies with known metascores
+GROUP BY
+    EXTRACT(MONTH FROM m.reldate)  -- Grouping by the month
+ORDER BY
+
+    avg_production_budget DESC,  -- Then by production budget (descending)
+    avg_metascore ,
+    release_month ;
