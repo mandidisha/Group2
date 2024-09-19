@@ -9,7 +9,7 @@
 --Further explanation about how the datasets were cleaned and processed in the research document
 
 
--- Creating movie table [Done by Mandi]
+-- Creating movie table [Done by ]
 CREATE TABLE Movies (
     URL VARCHAR(255) PRIMARY KEY,  -- URL of the movie's page
     Title VARCHAR(255),  -- Movie title
