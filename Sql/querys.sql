@@ -1,7 +1,7 @@
 ---------------------------------------------------------------------These are the SQL queries for Group 2-------------------------------------------------------------------
 
 
---Our group is composed by: Mandi, David, Anastasia, Zakaria and Mees
+--Our group is composed by: Mandi, David, Anastasia, Zakaria and 
 
 
 ---GROUP TASKS---
@@ -34,7 +34,7 @@ CREATE TABLE Rating (
 );
 
 
----------------------------------------------------------------------CODE BY Mandi Disha-----------------------------------------------------------------------------------
+---------------------------------------------------------------------CODE BY Mandi -----------------------------------------------------------------------------------
 
 
 --The database is created and now we are going to analyze what is the relationship
@@ -79,3 +79,4 @@ ORDER BY
 --To run this code to preview the research table stored in a temporary table
 SELECT * FROM movie_analysis
 ---------------------------------------------------------------------END CODE BY Mandi Disha
+
