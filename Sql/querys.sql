@@ -533,3 +533,129 @@ JOIN expert e
 ON LOWER(s.title_year) = LOWER(e.title_year);  -- Match on title and year (case-insensitive)
 
     ---------------------------------------------------------------------END CODE DAVID TAPIA -----------------------------------------------------------------------------------
+
+--------------------------------CODE ZAKARIA---------------------------------------------------------
+-- 
+CREATE TABLE user_reviews (
+    url VARCHAR(255),
+    idvscore INT,
+    reviewer VARCHAR(100),
+    dateP DATE,
+    Rev TEXT,
+    thumbsUp INT,
+    thumbsTot INT,
+    WC INT,
+    Analytic FLOAT,
+    Clout FLOAT,
+    Authentic FLOAT,
+    Tone FLOAT,
+    WPS FLOAT,
+    Sixltr FLOAT,
+    Dic FLOAT,
+    function1 FLOAT,
+    pronoun FLOAT,
+    ppron FLOAT,
+    i FLOAT,
+    we FLOAT,
+    you FLOAT,
+    shehe FLOAT,
+    they FLOAT,
+    ipron FLOAT,
+    article FLOAT,
+    prep FLOAT,
+    auxverb FLOAT,
+    adverb FLOAT,
+    conj FLOAT,
+    negate FLOAT,
+    verb FLOAT,
+    adj FLOAT,
+    compare FLOAT,
+    interrog FLOAT,
+    number1 FLOAT,
+    quant FLOAT,
+    affect FLOAT,
+    posemo FLOAT,
+    negemo FLOAT,
+    anx FLOAT,
+    anger FLOAT,
+    sad FLOAT,
+    social FLOAT,
+    family FLOAT,
+    friend FLOAT,
+    female FLOAT,
+    male FLOAT,
+    cogproc FLOAT,
+    insight FLOAT,
+    cause FLOAT,
+    discrep FLOAT,
+    tentat FLOAT,
+    certain FLOAT,
+    differ FLOAT,
+    percept FLOAT,
+    see FLOAT,
+    hear FLOAT,
+    feel FLOAT,
+    bio FLOAT,
+    body FLOAT,
+    health FLOAT,
+    sexual FLOAT,
+    ingest FLOAT,
+    drives FLOAT,
+    affiliation FLOAT,
+    achieve FLOAT,
+    power FLOAT,
+    reward FLOAT,
+    risk FLOAT,
+    focuspast FLOAT,
+    focuspresent FLOAT,
+    focusfuture FLOAT,
+    relativ FLOAT,
+    motion FLOAT,
+    space1 FLOAT,
+    time1 FLOAT,
+    work1 FLOAT,
+    leisure FLOAT,
+    home FLOAT,
+    money1 FLOAT,
+    relig FLOAT,
+    death FLOAT,
+    informal FLOAT,
+    swear FLOAT,
+    netspeak FLOAT,
+    assent FLOAT,
+    nonflu FLOAT,
+    filler FLOAT,
+    AllPunc FLOAT,
+    Period1 FLOAT,
+    Comma FLOAT,
+    Colon FLOAT,
+    SemiC FLOAT,
+    QMark FLOAT,
+    Exclam FLOAT,
+    Dash FLOAT,
+    Quote1 FLOAT,
+    Apostro FLOAT,
+    Parenth FLOAT,
+    OtherP FLOAT
+);
+
+-- JOIN sales table and metaclean (movies table) based on action
+
+SELECT
+    b.title,               -- Kolom van de eerste tabel
+    b.worldwide_box_office,        -- Kolom van de eerste tabel
+    b.production_budget,           -- Kolom van de eerste tabel
+    m.studio,              -- Kolom van de tweede tabel
+    m.genre AS genre_movies_info,    -- Volledige genre-lijst van de tweede tabel
+    m.RelDate AS release_date_movies_info  -- Kolom van de tweede tabel (met alias)
+FROM
+    sales_v20 b  -- Eerste tabel (box office data)
+INNER JOIN
+    movies2 m  -- Tweede tabel (films info)
+ON
+    b.title = m.title  -- Correct gebruik van de alias 'b'
+AND
+    b.release_year = EXTRACT(YEAR FROM m.RelDate)
+WHERE
+    m.genre LIKE '%Action%';
+-----------------------------END CODE ZAKARIA---------------------------------------------------------    
